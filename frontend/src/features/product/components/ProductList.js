@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -10,6 +10,8 @@ import {
 } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllProductsAsync, selectAllProducts } from "../productListSlice";
 
 const items = [
   {
@@ -99,8 +101,17 @@ const products = [
   // More products...
 ];
 
+
+
+
+
 export default function ProductList() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const products = useSelector(selectAllProducts)
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(fetchAllProductsAsync())
+  },[dispatch])
   return (
     <div className="bg-white">
       <div>
@@ -365,7 +376,7 @@ export default function ProductList() {
                         <div key={product.id} className="group relative">
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                             <img
-                              src={product.imageSrc}
+                              src={product.thumbnail}
                               alt={product.imageAlt}
                               className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                             />
@@ -373,16 +384,16 @@ export default function ProductList() {
                           <div className="mt-4 flex justify-between">
                             <div>
                               <h3 className="text-sm text-gray-700">
-                                <a href={product.href}>
+                                <a href="#">
                                   <span
                                     aria-hidden="true"
                                     className="absolute inset-0"
                                   />
-                                  {product.name}
+                                  {product.title}
                                 </a>
                               </h3>
                               <p className="mt-1 text-sm text-gray-500">
-                                {product.color}
+                                {product.brand}
                               </p>
                             </div>
                             <p className="text-sm font-medium text-gray-900">
