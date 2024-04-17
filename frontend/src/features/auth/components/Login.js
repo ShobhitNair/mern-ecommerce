@@ -1,9 +1,22 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import { useForm } from "react-hook-form"
+import { checkUserAsync, selectError, selectLoggedInUser } from '../authSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+  const error = useSelector(selectError)
+  const user = useSelector(selectLoggedInUser)
+  const dispatch = useDispatch()
   return (
     <>
+    {user && <Navigate replace={true} to="/"/>}
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -17,20 +30,27 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <div>
+          <form noValidate className="space-y-6"  onSubmit={handleSubmit((data)=>{
+            dispatch(checkUserAsync({email: data.email, password: data.password}))
+          })}>
+          <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
                 <input
                   id="email"
-                  name="email"
+                  {...register("email",{
+                    required: "EMAIL IS REQUIRED",
+                    pattern:{ 
+                    value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+                    message: 'email is not validated'},
+                })}
                   type="email"
-                  autoComplete="email"
-                  required
+              
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {/* <p className='text-red-500'>{errors?.email?.message}</p> */}
               </div>
             </div>
 
@@ -48,12 +68,12 @@ const Login = () => {
               <div className="mt-2">
                 <input
                   id="password"
-                  name="password"
+                  {...register("password",{required: "PASSWORD IS REQUIRED", pattern:{ value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm, message: `password must contain 1 uppercase letter, 1 lower letter, and 1 number \n -should contain special character `}})}
                   type="password"
-                  autoComplete="current-password"
-                  required
+                 
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {error && <p className='text-red-500'>{error.message}</p>}
               </div>
             </div>
 
@@ -70,7 +90,7 @@ const Login = () => {
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
             <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Start a 14 day free trial
+              Please Sign UP
             </Link>
           </p>
         </div>

@@ -1,6 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from "react-hook-form"
 import { createUserAsync, selectLoggedInUser } from '../authSlice'
+import { Link, Navigate } from 'react-router-dom'
 
 const SignUp = () => {
   const {
@@ -14,7 +16,7 @@ const SignUp = () => {
   
   return (
     <>
-    {user.email}
+     {user && <Navigate replace={true} to="/"/>}
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -106,9 +108,9 @@ const SignUp = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Start a 14 day free trial
-            </a>
+            <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Already have an account then Please Login
+            </Link>
           </p>
         </div>
       </div>

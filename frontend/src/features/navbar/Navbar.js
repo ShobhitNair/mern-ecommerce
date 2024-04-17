@@ -76,8 +76,9 @@ const Navbar = () => {
                     >
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">View notifications</span>
+                      <span className="-top-3 absolute inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">1</span>
                         <ShoppingCartIcon
-                          className="h-6 w-6"
+                          className="h-6 w-6 mx-2"
                           aria-hidden="true"
                         />
                     </button>
